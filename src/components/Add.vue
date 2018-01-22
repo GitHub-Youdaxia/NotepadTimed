@@ -1,28 +1,30 @@
 <template>
   <div class='add'>
-    <el-select v-model="value" placeholder="请选择">
-      <el-option
-        v-for="item in options"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value">
-      </el-option>
-    </el-select>
     <quill-editor v-model='content' ref='quillEditorA' :options='editorOption' @blur='onEditorBlur($event)' @focus='onEditorFocus($event)' @ready='onEditorReady($event)'>
     </quill-editor>
+    <div class="add-bottom">
+      <el-select v-model="value" placeholder="请选择添加分类">
+        <el-option
+          v-for="item in classArr"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-button @click='addInfo' title='默认添加到default分类' type="primary">添加</el-button>
+      <div></div>
+    </div>
   </div>
 </template>
 
 <script>
-import classArr from '../../class'
-console.log(classArr)
+var store = require('storejs')
 export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      content: 'Welcome to Your Vue.js App',
-      options: classArr.class,
+      content: '',
+      classArr: store.get('classArr')?store.get('classArr'):[],
       value: '',
       editorOption: {
         theme: 'snow',
@@ -56,6 +58,9 @@ export default {
     }
   },
   methods: {
+    addInfo () {
+
+    },
     onEditorBlur (editor) {
       console.log('editor blur!', editor)
     },
@@ -71,19 +76,8 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
-  h1,
-  h2 {
-    font-weight: normal;
-  }
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-  a {
-    color: #42b983;
-  }
+.add-bottom{
+  margin-top:6px;
+  margin-bottom:6px;
+}
 </style>

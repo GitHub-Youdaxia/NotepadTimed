@@ -1,4 +1,5 @@
 # notepadtimed
+进度：
 build	最终发布的代码存放位置。
 config	配置目录，包括端口号等。我们初学可以使用默认的。
 node_modules	npm 加载的项目依赖模块

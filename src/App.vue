@@ -10,8 +10,16 @@
 
 <script>
 console.clear()
+var store = require('storejs')
+
 export default {
-  name: 'App'
+  name: 'App',
+  created: function(){
+    // store.clear()
+    if(!store.get('classArr')){
+      store.set('classArr',this.classArr)
+    }    
+  }
 }
 </script>
 
