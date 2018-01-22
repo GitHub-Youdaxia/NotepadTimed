@@ -11,13 +11,20 @@
 <script>
 console.clear()
 var store = require('storejs')
-
 export default {
   name: 'App',
   created: function(){
-    // store.clear()
+    store.clear()
+    //初始化本地存储
     if(!store.get('classArr')){
+      this.log('初始化本地存储')
       store.set('classArr',this.classArr)
+      var classArrLength=this.classArr.length
+      for(var i=0;i<classArrLength;i++){
+        store.set(this.classArr[i].value,[])
+        this.log(this.classArr[i].value);
+        this.log(store.get(this.classArr[i].value));
+      }
     }    
   }
 }

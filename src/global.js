@@ -17,8 +17,8 @@ export default{
     }
     Vue.prototype.classArr =
       [{
-        'value': 'css1',
-        'label': 'css1'
+        'value': 'css',
+        'label': 'css'
       }, {
         'value': 'js',
         'label': 'js'
