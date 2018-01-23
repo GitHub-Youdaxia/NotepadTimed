@@ -1,5 +1,6 @@
 # notepadtimed
 进度：
+优化：删除提醒
 本地存储APIs
 
 store(key, data);                 //单个存储字符串数据

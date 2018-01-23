@@ -14,7 +14,7 @@ var store = require('storejs')
 export default {
   name: 'App',
   created: function(){
-    store.clear()
+    // store.clear()
     //初始化本地存储
     if(!store.get('classArr')){
       this.log('初始化本地存储')
@@ -36,4 +36,13 @@ export default {
   color: #2c3e50;
   margin-top: 10px;
 }
+p{  -webkit-margin-before:0;
+  -webkit-margin-after:0;
+  text-indent: 2em;}
+  .el-card__header{
+    padding-top:2px;
+    padding-bottom:2px;
+  }
+.clearfix:after {display: block;clear: both;content: "";visibility: hidden;height: 0;}
+.clearfix{zoom:1;}
 </style>
