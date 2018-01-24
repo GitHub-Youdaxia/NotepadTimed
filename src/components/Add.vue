@@ -29,9 +29,17 @@
                     <span class="item-num">{{infoIndex+1}}</span>
                     <div class="item-header-right">
                       <el-button-group>
-                      <el-button size="mini" plain icon="el-icon-delete" @click="remove(classIndex,infoIndex)"></el-button>
-                      <el-button size="mini" plain icon="el-icon-edit" @click="edit(classIndex,infoIndex)"></el-button>
-                      <el-button size="mini" plain icon="el-icon-share" @click="share(classIndex,infoIndex)"></el-button>
+                        提醒间隔:
+                        <el-input-number v-model="hourArr[classIndex][infoIndex]" style="width:90px" controls-position="right" :min="0.001" :max="10" size="mini" :step="0.5" ></el-input-number>
+                        小时                  
+                      </el-button-group>
+                      <el-button-group>
+                        <el-button title='提醒一次' size="mini" plain icon="" @click="startOnce(classIndex,infoIndex)">一次</el-button>
+                        <el-button title='提醒多次' size="mini" plain icon="" @click="start(classIndex,infoIndex)">多次</el-button>                         </el-button-group>
+                      <el-button-group>
+                      <el-button title='删除' size="mini" plain icon="el-icon-delete" @click="remove(classIndex,infoIndex)"></el-button>
+                      <el-button title='编辑'  size="mini" plain icon="el-icon-edit" @click="showEditDialog(classIndex,infoIndex)"></el-button>
+                      <el-button title='复制'  size="mini" plain icon="el-icon-share" v-clipboard:copy="share(classIndex,infoIndex)" v-clipboard:success="onCopy" v-clipboard:error="onCopyError" ></el-button>
                       </el-button-group>
                     </div>
                   </div>                  
@@ -40,7 +48,20 @@
               </div>
           </el-tab-pane>
         </el-tabs>   
-      </div>    
+      </div>
+      <!-- 修改信息对话框     -->
+      <el-dialog
+        title="修改信息"
+        :visible.sync="dialogVisible"
+        width="80%"
+        :before-close="handleClose" center>
+    <quill-editor v-model='editContent' ref='editQuillEditor' :options='editorOption'>
+    </quill-editor>        
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="edit">确 定</el-button>
+        </span>
+      </el-dialog>
   </div>
 </template>
 
@@ -50,9 +71,14 @@ export default {
   name: 'add',
   data () {
     return {
+      hourArr:[],
+      classIndex:'',
+      infoIndex:'',
+      dialogVisible: false,
       percentage:0,
       editableTabsValue: '7',
       content: '',
+      editContent:'',
       classArr: store.get('classArr')?store.get('classArr'):[],
       selectClass: '',
       editorOption: {
@@ -88,6 +114,7 @@ export default {
   },
   created:function(){
    this.getPercentage()
+   this.getHourArr()
   },
   computed: {
     editableTabs:function(){
@@ -104,20 +131,67 @@ export default {
     }
   },
   methods: {
+    getHourArr: function(){
+      var arr=[]
+        var len=this.classArr.length
+        for(var i=0;i<len;i++){
+          var arr2=[]
+          var classData=store.get(this.getClassNameByIndex(i))
+          var len2=classData.length
+          for(var j=0;j<len2;j++){
+            arr2[j]=''
+          }
+          arr.push(arr2)
+        }
+        this.hourArr= arr    
+    },
+    start: function(classIndex,infoIndex){
+
+    },
+    startOnce: function(classIndex,infoIndex){
+      var time=this.hourArr[classIndex][infoIndex];
+      this.log(' time',time);
+      var info=this.getInfo(classIndex,infoIndex);
+      var self=this
+        setTimeout(function(){
+            self.$notify({
+            title: '提示',
+            message:'<div v-html="info"><div>',
+            duration: 0
+          });
+        },time*60*60*1000)
+
+    },
+    getInfo:function(classIndex,infoIndex){
+      var className=this.getClassNameByIndex(classIndex)
+      var info=store.get(className)[infoIndex]
+      return info
+    },
+    onCopy : function(){
+          this.$message({
+          message: '消息复制成功',
+          type: 'success'
+        });  
+    },
+    onCopyError : function(){
+          this.$message({
+          message: '消息复制失败',
+          type: 'warning'
+        });  
+    },
     tabChange : function(){
        var index=this.editableTabsValue;
        var className=this.getClassNameByIndex(index)
        this.selectClass=className+''     
     },    
     classChange (){
-      var index=this.getIndexBySelectClass(this.selectClass)
+      var index=this.getIndexByClassName(this.selectClass)
       this.editableTabsValue=index+''
     },
     getPercentage (){
       this.percentage= ((JSON.stringify(localStorage).length/5000000)*100).toFixed(4)*1
     },
     addInfo () {
-      // this.log(' this.selectClass',typeof this.selectClass);
       if(this.content.length==0){
         this.$message({
           message: '消息不能为空',
@@ -140,18 +214,15 @@ export default {
       this.refresh(this.selectClass)
     },
     refresh (selectClass){
-       this.log('selectClass',selectClass)
-      var index=this.getIndexBySelectClass(selectClass);
+      var index=this.getIndexByClassName(selectClass);
       this.editableTabs[index].content=store.get(selectClass);
-      this.log(' this.editableTabs[index].content',this.editableTabs[index].content);
       //不这样设置两次，删除的时候不自动刷新分类数据
       this.editableTabsValue=''
       this.editableTabsValue=index+''
-      this.log('selectClass',selectClass)
 
       //
     },
-    getIndexBySelectClass (selectClass){
+    getIndexByClassName (selectClass){
       var arr=[]
       var len=this.classArr.length
       var index
@@ -171,24 +242,74 @@ export default {
         store.set(className,data)
         this.content=''
         this.getPercentage()
+        var classIndex=this.getIndexByClassName(className)
+        this.hourArr[classIndex].push(0.1);
+
     },
-    edit(classIndex,infoIndex){
-      this.log(' classIndex',classIndex);
-      this.log(' infoIndex',infoIndex);
+    edit (){
+        var className=this.getClassNameByIndex(this.classIndex)
+        var data=store.get(className)
+        data[this.infoIndex]=this.editContent
+        store.set(className,data)
+        this.editableTabs[this.classIndex].content=data;        
+        this.dialogVisible=false
+        this.editableTabsValue=''
+        this.editableTabsValue=this.classIndex+''        
+        this.getPercentage()
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        });
+    },
+    showEditDialog(classIndex,infoIndex){
+      this.dialogVisible=true
+
+      this.editContent=this.getInfo(classIndex,infoIndex)
+      this.classIndex=classIndex  
+      this.infoIndex=infoIndex  
     },
     remove(classIndex,infoIndex){
+        this.$confirm('确定删除此消息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
 
-      var className=this.getClassNameByIndex(classIndex)
-      var currentData=store.get(className)
-      currentData.splice(infoIndex, 1);
-      store.set(className,currentData)
-      this.refresh(className)
-      this.getPercentage()
+        var className=this.getClassNameByIndex(classIndex)
+        var currentData=store.get(className)
+        currentData.splice(infoIndex, 1);
+        store.set(className,currentData)
+        this.refresh(className)
+        this.hourArr[classIndex].splice(infoIndex, 1);
+        this.getPercentage()          
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+
+
     },
     share(classIndex,infoIndex){
-      this.log(' classIndex',classIndex);
-      this.log(' infoIndex',infoIndex);
+      var className=this.getClassNameByIndex(classIndex)
+      var currentData=store.get(className)
+      var copyValue = currentData[infoIndex] 
+      var reg = /[\u4e00-\u9fa5]/g;  
+      var copyValues = copyValue.match(reg);
+      return currentData[infoIndex].replace(/<[^>]+>/g,"") 
     },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
+    },    
     onEditorBlur (editor) {
       // console.log('editor blur!', editor)
     },
@@ -214,6 +335,6 @@ export default {
 }
 
 .progress{display: inline-block;width: 150px;}
-.item-header-right{float: right;}
+.item-header-right{float: right;font-size: 14px;}
 .item-num{line-height: 28px;}
 </style>

@@ -17,6 +17,7 @@
     "element-ui": "^2.0.11",
     "storejs": "^1.0.16",
     "vue": "^2.5.2",
+    "vue-clipboard2": "^0.0.8",
     "vue-quill-editor": "^3.0.4",
     "vue-router": "^3.0.1"
   },
