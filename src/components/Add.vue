@@ -1,5 +1,6 @@
 <template>
   <div class='main'>
+    <div class="main-header">
     <quill-editor v-model='content' ref='quillEditorA' :options='editorOption' @blur='onEditorBlur($event)' @focus='onEditorFocus($event)' @ready='onEditorReady($event)'>
     </quill-editor>
     <div class="add">
@@ -15,8 +16,9 @@
       <div class="progress" title="本地存储空间使用百分比">
         <el-progress :percentage='percentage'></el-progress></div>
     </div>
-      <div class="content-list">
-        <el-tabs v-model="editableTabsValue" type="border-card" @tab-click='tabChange'>
+    </div>
+      <div class="main-content">
+        <el-tabs v-model="editableTabsValue" type="border-card" @tab-click='tabChange' class="main-content-tab">
           <el-tab-pane
             :key="item.name"
             v-for="(item,classIndex) in editableTabs"
@@ -26,7 +28,7 @@
               <div v-for="(o,infoIndex) in item.content" :key="infoIndex" >
                 <el-card class="box-card" :body-style="{ paddingLeft: '30px',paddingRight: '30px',paddingTop: '0',paddingBottom: '0' }">
                   <div slot="header" class="clearfix">
-                    <span class="item-num">{{infoIndex+1}}</span>
+                    <span class="item-num"><el-tag size="mini">{{infoIndex+1}}</el-tag></span>
                     <div class="item-header-right">
                       <el-button-group>
                         提醒间隔:
@@ -34,8 +36,10 @@
                         小时                  
                       </el-button-group>
                       <el-button-group>
-                        <el-button title='提醒一次' size="mini" plain icon="" @click="startOnce(classIndex,infoIndex)">一次</el-button>
-                        <el-button title='提醒多次' size="mini" plain icon="" @click="start(classIndex,infoIndex)">多次</el-button>                         </el-button-group>
+                        <el-button class="start" title='提醒一次' size="mini" :disabled=btn plain icon="" @click="start(classIndex,infoIndex,1,$event)">一次</el-button>
+                        <el-button class="start" title='提醒多次' size="mini" :disabled=btn plain icon="" @click="start(classIndex,infoIndex,0,$event)">多次</el-button>
+                        <el-button class='cancel' title='取消提醒' size="mini" plain icon="" @click="cancel(classIndex,infoIndex,$event)">取消</el-button>
+                      </el-button-group>
                       <el-button-group>
                       <el-button title='删除' size="mini" plain icon="el-icon-delete" @click="remove(classIndex,infoIndex)"></el-button>
                       <el-button title='编辑'  size="mini" plain icon="el-icon-edit" @click="showEditDialog(classIndex,infoIndex)"></el-button>
@@ -66,12 +70,26 @@
 </template>
 
 <script>
+//添加的纯数字信息过长时，使用该方法显示信息不换行
+      // this.timerArr[classIndex][infoIndex]=setTimeout(function(){
+      //       self.$notify.info({
+      //       title: '消息',
+      //       dangerouslyUseHTMLString: true,
+      //       message:info,
+      //       offset: 100,
+      //       duration: 0
+      //     });
+      //   },time*60*60*1000)
+//固定顶部
+//分类标注信息的个数
 var store = require('storejs')
 export default {
   name: 'add',
   data () {
     return {
+      btn:false,
       hourArr:[],
+      timerArr:[],
       classIndex:'',
       infoIndex:'',
       dialogVisible: false,
@@ -115,6 +133,14 @@ export default {
   created:function(){
    this.getPercentage()
    this.getHourArr()
+   this.getTimerArr()
+
+  },
+  mounted:function(){
+    // 设置 main-content的高度=页面高度-main-header的高度
+    var mainContentHeight = $(window).height()-$('.main-header').height()
+    console.log(mainContentHeight)
+    $(".el-tabs__content").height(mainContentHeight-100)
   },
   computed: {
     editableTabs:function(){
@@ -131,6 +157,20 @@ export default {
     }
   },
   methods: {
+    getTimerArr: function(){
+      var arr=[]
+        var len=this.classArr.length
+        for(var i=0;i<len;i++){
+          var arr2=[]
+          var classData=store.get(this.getClassNameByIndex(i))
+          var len2=classData.length
+          for(var j=0;j<len2;j++){
+            arr2[j]=''
+          }
+          arr.push(arr2)
+        }
+        this.timerArr= arr    
+    },
     getHourArr: function(){
       var arr=[]
         var len=this.classArr.length
@@ -145,22 +185,41 @@ export default {
         }
         this.hourArr= arr    
     },
-    start: function(classIndex,infoIndex){
-
-    },
-    startOnce: function(classIndex,infoIndex){
+    start: function(classIndex,infoIndex,type,event){
+      // $(event.target).text('启动中')
+      // this.btn=true
+      if (event) {
+        $(event.target).parents('.el-button-group').find('.start').each(function(){
+          $(this).addClass('is-disabled').attr('disabled',true)
+        })
+      }
       var time=this.hourArr[classIndex][infoIndex];
-      this.log(' time',time);
       var info=this.getInfo(classIndex,infoIndex);
       var self=this
-        setTimeout(function(){
-            self.$notify({
-            title: '提示',
-            message:'<div v-html="info"><div>',
-            duration: 0
-          });
+      if(type==0){
+      this.timerArr[classIndex][infoIndex]=setInterval(function(){
+          console.log('ddd')
+         self.openWin(info)
         },time*60*60*1000)
+      }else{
+        this.timerArr[classIndex][infoIndex]=setTimeout(function(){
+           self.openWin(info)
+         $(event.target).parents('.el-button-group').find('.cancel').each(function(){
+          $(this).click()
+        })          
+        },time*60*60*1000)      
+      }
 
+    },
+    cancel: function(classIndex,infoIndex,event){
+      // this.btn=false
+      if (event) {
+        $(event.target).parents('.el-button-group').find('.start').each(function(){
+          $(this).removeClass('is-disabled').attr('disabled',false)
+        })
+      }      
+      clearTimeout(this.timerArr[classIndex][infoIndex])
+      clearInterval(this.timerArr[classIndex][infoIndex])
     },
     getInfo:function(classIndex,infoIndex){
       var className=this.getClassNameByIndex(classIndex)
@@ -241,9 +300,11 @@ export default {
         data.push(this.content)
         store.set(className,data)
         this.content=''
+
         this.getPercentage()
         var classIndex=this.getIndexByClassName(className)
-        this.hourArr[classIndex].push(0.1);
+        this.hourArr[classIndex].push(0.001);
+        this.timerArr[classIndex].push('');
 
     },
     edit (){

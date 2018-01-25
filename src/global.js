@@ -1,5 +1,16 @@
 export default{
   install (Vue, options) {
+    // $(window).on('scroll', function () {
+    //   if ($(this).scrollTop() > 150) {
+    //     $('.main-header').addClass('fixed')
+    //   } else {
+    //     $('.main-header').addClass('fixed')
+    //   }
+    // })
+    // 设置 main-content的高度=页面高度-main-header的高度
+    // var mainContentHeight = $(window).height()-$('.main-header').height()
+    // console.log(mainContentHeight)
+    // $('.main-content').height(mainContentHeight)
     Vue.prototype.log = function () {
       var args = Array.prototype.slice.apply(arguments)
       if (args.length === 1) {
@@ -15,10 +26,31 @@ export default{
         console.log(JSON.stringify(args[1]))
       }
     }
+    Vue.prototype.openWin = function (content) {
+      // white-space: pre-wrap; word-break: break-all;word-wrap: break-word;
+      var width = 600
+      var height = 365
+      var positionLeft = window.screen.width * 1 - width
+      var positionHeight = window.screen.height * 1 - height
+      var positionTop = 0
+      var cssStr = 'html,body{height:100%;overflow-x:hidden;overflow-y:auto;paddding-bottom:100px;background:#3cb371;color:#FFF;}'
+      cssStr += '/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/::-webkit-scrollbar{width: 8px;height: 8px;background-color: #3cb371;}/*定义滚动条轨道 内阴影+圆角*/::-webkit-scrollbar-track   {-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);border-radius: 10px;  background-color: #F5F5F5;   }  /*定义滑块 内阴影+圆角*/   ::-webkit-scrollbar-thumb  {   border-radius: 10px;   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);   background-color: #555; }  '
+      cssStr += 'html ::-webkit-scrollbar {display:none} #xmp ::-webkit-scrollbar {display:block}'
+      var myWindow = window.open('', '_blank', 'width=' + width + ',height=' + height + '')
+      myWindow.moveTo(positionLeft, positionHeight)
+      myWindow.focus()
+      $(myWindow.document.body).attr('scrolling', 'no')
+      $(myWindow.document.body).append('<style>' + cssStr + '</style>')
+      var jsStr = 'window.setTimeout(function(){ window.close(); },10000)'
+      $(myWindow.document.body).append('<div id="xmp" style="display:block;min-height:100%;padding:10px 10px 100px 10px;height:100%;">' + content + '</div>')
+      // console.log(content)
+      // window.showModalDialog('',content)
+    }
     Vue.prototype.copyToClipboard = function (elem) {
       var targetId = '_hiddenCopyText_'
       var isInput = elem.tagName === 'INPUT' || elem.tagName === 'TEXTAREA'
       var origSelectionStart, origSelectionEnd
+      var target
       if (isInput) {
         // 如果是input标签或textarea，则直接指定该节点
         target = elem

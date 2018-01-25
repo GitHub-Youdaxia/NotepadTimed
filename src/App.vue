@@ -31,11 +31,25 @@ export default {
 </script>
 
 <style>
+html,body{height:100%;}
+body {
+overflow-x:hidden;
+overflow-y:hidden;
+}
 #app {
   font-family: 'microsoft yahei';
   color: #2c3e50;
   margin-top: 10px;
+  height:100%;
 }
+.el-row{
+  height: 100%;
+}
+.el-row .el-col{
+  height: 100%;
+}
+
+
 p{  -webkit-margin-before:0;
   -webkit-margin-after:0;
   text-indent: 2em;}
@@ -45,4 +59,18 @@ p{  -webkit-margin-before:0;
   }
 .clearfix:after {display: block;clear: both;content: "";visibility: hidden;height: 0;}
 .clearfix{zoom:1;}
+.fixed{position: fixed;left:0;top:0;width: 100%;z-index: 1000}
+/* 显示滚动条 */
+.el-tabs__content{overflow: auto}
+
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+.el-tabs__content::-webkit-scrollbar{width: 8px;height: 8px;background-color: #fff;}
+/*定义滚动条轨道 内阴影+圆角*/
+.el-tabs__content::-webkit-scrollbar-track{box-shadow: inset 0 0 6px rgba(0,0,0,0.3);border-radius: 10px;  background-color: #fff; } 
+ /*定义滑块 内阴影+圆角*/   
+ .el-tabs__content::-webkit-scrollbar-thumb  {  border-radius: 10px;box-shadow: inset 0 0 6px rgba(0,0,0,.3);  
+  background-color: #5CACEE;}
+  .el-card__header{padding: 2px 4px}
+
+
 </style>
