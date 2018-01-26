@@ -17,7 +17,6 @@ export default {
     // store.clear()
     //初始化本地存储
     if(!store.get('classArr')){
-      this.log('初始化本地存储')
       store.set('classArr',this.classArr)
       var classArrLength=this.classArr.length
       for(var i=0;i<classArrLength;i++){
@@ -32,10 +31,15 @@ export default {
 
 <style>
 html,body{height:100%;}
+/* padding-right:0 !important; 弹出时莫名加了padding，所以去掉它
+*/
 body {
 overflow-x:hidden;
 overflow-y:hidden;
+padding-right:0 !important;
 }
+.el-row::-webkit-scrollbar{display: none}
+
 #app {
   font-family: 'microsoft yahei';
   color: #2c3e50;
