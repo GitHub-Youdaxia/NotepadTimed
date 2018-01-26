@@ -48,7 +48,7 @@
               <div v-for="(o,infoIndex) in item.content" :key="infoIndex" >
                 <el-card class="box-card" :body-style="{ paddingLeft: '30px',paddingRight: '30px',paddingTop: '0',paddingBottom: '0' }">
                   <div slot="header" class="clearfix">
-                    <span class="item-num"><el-tag size="mini">{{infoIndex+1}}</el-tag></span>
+                    <span class="item-num"><el-tag type="info" color="#409EFF" size="mini">{{infoIndex+1}}</el-tag></span>
                     <div class="item-header-right">
                       <el-button-group>
                         提醒间隔:
@@ -56,14 +56,14 @@
                         小时                  
                       </el-button-group>
                       <el-button-group>
-                        <el-button class="start" title='提醒一次' size="mini" :disabled=btn plain icon="" @click="start(classIndex,infoIndex,1,$event)">一次</el-button>
-                        <el-button class="start" title='提醒多次' size="mini" :disabled=btn plain icon="" @click="start(classIndex,infoIndex,0,$event)">多次</el-button>
-                        <el-button class='cancel' title='取消提醒' size="mini" plain icon="" @click="cancel(classIndex,infoIndex,$event)">取消</el-button>
+                        <el-button class="start" title='提醒一次' size="mini" :disabled=btn  type="primary" icon="" @click="start(classIndex,infoIndex,1,$event)">一次</el-button>
+                        <el-button class="start" title='提醒多次' size="mini" :disabled=btn  type="primary" icon="" @click="start(classIndex,infoIndex,0,$event)">多次</el-button>
+                        <el-button class='cancel' title='取消提醒' size="mini"  type="primary" icon="" @click="cancel(classIndex,infoIndex,$event)">取消</el-button>
                       </el-button-group>
                       <el-button-group>
-                      <el-button title='删除' size="mini" type="danger"  icon="el-icon-delete" @click="remove(classIndex,infoIndex)"></el-button>
-                      <el-button title='编辑'  size="mini" plain icon="el-icon-edit" @click="showEditDialog(classIndex,infoIndex)"></el-button>
-                      <el-button title='复制'  size="mini" plain icon="el-icon-share" v-clipboard:copy="share(classIndex,infoIndex)" v-clipboard:success="onCopy" v-clipboard:error="onCopyError" ></el-button>
+                      <el-button title='删除' size="mini"  type="danger"  icon="el-icon-delete" @click="remove(classIndex,infoIndex)"></el-button>
+                      <el-button title='编辑'  size="mini"  type="primary" icon="el-icon-edit" @click="showEditDialog(classIndex,infoIndex)"></el-button>
+                      <el-button title='复制'  size="mini"  type="primary" icon="el-icon-share" v-clipboard:copy="share(classIndex,infoIndex)" v-clipboard:success="onCopy" v-clipboard:error="onCopyError" ></el-button>
                       </el-button-group>
                     </div>
                   </div>                  
@@ -99,7 +99,7 @@
     <el-button size="mini" type="primary" @click="onSubmit">添加</el-button>
   </el-form-item>
 </el-form>    
-      <el-table :data="gridData">
+      <el-table :data="gridData" height="500">
         <el-table-column property="value" label="类名" width="150"></el-table-column>
         <el-table-column property="num" label="信息数量" width="150"></el-table-column>
         <el-table-column
@@ -121,6 +121,21 @@
           </template>
         </el-table-column>        
       </el-table>
+    <!-- 内层修改类名dialog -->
+    <el-dialog
+      width="30%"
+      title="修改类名"
+      :visible.sync="innerVisible"
+      append-to-body>
+      <el-form :inline="true" :model="editClassName" :rules="rules2" ref="editClassName" class="demo-form-inline">
+        <el-form-item label="分类名称" prop="className">
+          <el-input size="mini" autofocus select v-model="editClassName.className" placeholder="填写分类名称"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button  size="mini" type="primary" @click="onEditClassName">修改</el-button>
+        </el-form-item>
+      </el-form>    
+    </el-dialog>      
     </el-dialog>      
   </div>
 </template>
@@ -142,6 +157,18 @@ export default {
   name: 'add',
   data () {
     return {
+      innerVisible:false,
+      editClassName:'',
+      editClassNameIndex:'',
+      rules2: {
+        className: [
+          { required: true, message: '请输分类名称', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ]
+      },      
+      editClassName:{
+        className: '',
+      },
       rules: {
         className: [
           { required: true, message: '请输分类名称', trigger: 'blur' },
@@ -159,7 +186,7 @@ export default {
       infoIndex:'',
       dialogVisible: false,
       percentage:0,
-      editableTabsValue: '7',
+      editableTabsValue: '0',
       content: '',
       editContent:'',
       classArr: store.get('classArr')?store.get('classArr'):[],
@@ -229,45 +256,153 @@ export default {
     gridData:function(){
       var classArrLen=this.classArr.length
       for(var i=0;i<classArrLen;i++){
-       this.classArr[i]['num']=store.get(this.getClassNameByIndex(i)).length
+        if(store.get(this.getClassNameByIndex(i))){
+          this.classArr[i]['num']=store.get(this.getClassNameByIndex(i)).length
+        }
       }
       return  this.classArr
     }
   },
   methods: {
+    onEditClassName(){
+      var newClassName= this.editClassName.className
+      var len=this.classArr.length 
+      var flag=false     
+      for(var i=0;i<len;i++){
+        if(this.classArr[i].value==newClassName){
+          flag=true
+          break
+        }
+      }
+      if(flag){
+        this.$message({
+          message: '修改失败！已存在分类"'+newClassName+'"不能重复添加',
+          type: 'warning'
+        });        
+        return false
+      } 
+      var editIndex=this.editClassNameIndex
+      var oldClassName=this.getClassNameByIndex(editIndex)
+      var oldData=store.get(oldClassName)
+      store.remove(oldClassName)
+      store.set(newClassName,oldData?oldData:[])
+      this.classArr[editIndex].value=newClassName
+      this.classArr[editIndex].label=newClassName
+
+      this.log(' this.classArr',this.classArr);
+      store.set('classArr',this.classArr)
+      this.gridData[editIndex].value=newClassName
+      // var classArrLen=this.classArr.length
+      // for(var i=0;i<classArrLen;i++){
+      //   if(store.get(this.getClassNameByIndex(i))){
+      //     this.classArr[i]['num']=store.get(this.getClassNameByIndex(i)).length
+      //   }
+      // }
+      // this.gridData=this.classArr
+      // this.hourArr.push([])
+      // this.timerArr.push([]) 
+
+      this.$message({
+          message: '分类修改成功',
+          type: 'success'
+        }); 
+      this.innerVisible=false           
+    },
     onSubmit(){
       var className=this.ruleForm.className
+      this.ruleForm.className=''
+      var len=this.classArr.length 
+      var flag=false     
+      for(var i=0;i<len;i++){
+        if(this.classArr[i].value==className){
+          flag=true
+          break
+        }
+      }
+      if(flag){
+        this.$message({
+          message: '添加失败！已存在分类"'+className+'"不能重复添加',
+          type: 'warning'
+        });        
+        return false
+      }
       store.set(className,[])
-
       this.classArr.push({
         'value':className,
         'label':className
       })
-      var len=this.classArr.length
       store.set('classArr',this.classArr)
-      this.editableTabs.push({
-            title: this.classArr[len].value,
-            name: len+'',
-            content: []
-          })
-
+      this.hourArr.push([])
+      this.timerArr.push([])
+      // this.editableTabs.push({
+      //       title: this.classArr[len].value,
+      //       name: len+'',
+      //       content: []
+      //     })
+      this.$message({
+          message: '分类添加成功',
+          type: 'success'
+        });  
     },
     editRow(index, rows) {
+      this.innerVisible=true;
+      this.editClassNameIndex=index
+      this.editClassName.className=this.classArr[index].value
     },   
     deleteRow(index, rows) {
-        rows.splice(index, 1);
+
+        this.$confirm('确定删除分类"'+this.getClassNameByIndex(index)+'"?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            var className=this.getClassNameByIndex(index)
+            store.remove(className);
+            this.log(' store.get(className)',store.get(className));
+            this.editableTabs.splice(index,1)        
+            this.hourArr.splice(index,1)
+            this.timerArr.splice(index,1)
+            rows.splice(index, 1);
+            this.classArr.splice(index, 1);
+            store.set('classArr',this.classArr)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+
+
     },   
     copyCurrenClassAll: function(){
+      this.log('dd');
       var data=store.get(this.selectClass)
-      var dataStr=data.join('/n')
-      var dataLen=data.length
-      var str=''
-      for(var i=0;i<dataLen;i++){
-        str+="\n"+data[i].replace(/<[^>]+>/g,"")+"\n"
+      if(data){
+        if(data.length==0){
+          // this.$message({
+          //   message: '分类"'+this.selectClass+'"数据是空的',
+          //   type: 'warning'
+          // });               
+          return
+        }
+        var dataStr=data.join('/n')
+        var dataLen=data.length
+        var str=''
+        for(var i=0;i<dataLen;i++){
+          str+="\n"+data[i].replace(/<[^>]+>/g,"")+"\n"
+        }
+        return str
       }
-      return str
+
     },
     deleteCurrenClassAll: function(){
+        if(store.get(this.selectClass).length==0){
+            this.$message({
+              type: 'info',
+              message: '分类："'+this.selectClass+'"数据是空的'
+            });      
+            return 
+        }
         this.$confirm('确定删除分类"'+this.selectClass+'"的所有信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -291,6 +426,13 @@ export default {
         });
     },
     startCarousel: function(){
+        if(store.get(this.selectClass).length==0){
+            this.$message({
+              type: 'info',
+              message: '分类："'+this.selectClass+'"数据是空的'
+            });      
+            return 
+        }      
       $('.info-carousel').each(function(){
         $(this).show()
       })
@@ -318,11 +460,14 @@ export default {
         for(var i=0;i<len;i++){
           var arr2=[]
           var classData=store.get(this.getClassNameByIndex(i))
-          var len2=classData.length
-          for(var j=0;j<len2;j++){
-            arr2[j]=''
+          if(classData){
+            var len2=classData.length
+            for(var j=0;j<len2;j++){
+              arr2[j]=''
+            }
+            arr.push(arr2)
           }
-          arr.push(arr2)
+
         }
         this.timerArr= arr    
     },
@@ -332,11 +477,14 @@ export default {
         for(var i=0;i<len;i++){
           var arr2=[]
           var classData=store.get(this.getClassNameByIndex(i))
-          var len2=classData.length
-          for(var j=0;j<len2;j++){
-            arr2[j]=''
+          if(classData){
+            var len2=classData.length
+            for(var j=0;j<len2;j++){
+              arr2[j]=''
+            }
+            arr.push(arr2)
           }
-          arr.push(arr2)
+
         }
         this.hourArr= arr    
     },
@@ -551,8 +699,8 @@ export default {
 }
 
 .progress{display: inline-block;width: 150px;}
-.item-header-right{float: right;font-size: 14px;}
-.item-num{line-height: 28px;}
+.item-header-right{float: right;font-size: 14px;color: #909399}
+.item-num span{color: #FFF}
   .el-carousel__item{color:#FFF;padding: 25px;box-sizing: border-box}
   .el-carousel__item:nth-child(2n) {
     background-color: #46485f;

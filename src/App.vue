@@ -15,6 +15,7 @@ export default {
   name: 'App',
   created: function(){
     // store.clear()
+    this.log(' store.get()',store.get('classArr'));
     //初始化本地存储
     if(!store.get('classArr')){
       store.set('classArr',this.classArr)
@@ -67,6 +68,13 @@ p{  -webkit-margin-before:0;
 /* 显示滚动条 */
 .el-tabs__content{overflow: auto}
 
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+.el-table__body-wrapper::-webkit-scrollbar{width: 8px;height: 8px;background-color: #fff;}
+/*定义滚动条轨道 内阴影+圆角*/
+.el-table__body-wrapper::-webkit-scrollbar-track{box-shadow: inset 0 0 6px rgba(0,0,0,0.3);border-radius: 10px;  background-color: #fff; } 
+ /*定义滑块 内阴影+圆角*/   
+ .el-table__body-wrapper::-webkit-scrollbar-thumb  {  border-radius: 10px;box-shadow: inset 0 0 6px rgba(0,0,0,.3);  
+  background-color: #5CACEE;}
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 .el-tabs__content::-webkit-scrollbar{width: 8px;height: 8px;background-color: #fff;}
 /*定义滚动条轨道 内阴影+圆角*/

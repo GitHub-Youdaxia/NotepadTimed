@@ -117,34 +117,35 @@ export default{
       return succeed
     }
     Vue.prototype.classArr =
-      [{
-        'value': 'css',
-        'label': 'css'
-      }, {
-        'value': 'js',
-        'label': 'js'
-      }, {
-        'value': 'jquery',
-        'label': 'jquery'
-      }, {
-        'value': 'vue',
-        'label': 'vue'
-      }, {
-        'value': 'react',
-        'label': 'react'
-      },
-      {
-        'value': 'php',
-        'label': 'php'
-      },
-      {
-        'value': 'mysql',
-        'label': 'mysql'
-      },
-      {
-        'value': 'default',
-        'label': 'default'
-      }
+      [
+        {
+          'value': 'default',
+          'label': 'default'
+        },
+        {
+          'value': 'css',
+          'label': 'css'
+        }, {
+          'value': 'js',
+          'label': 'js'
+        }, {
+          'value': 'jquery',
+          'label': 'jquery'
+        }, {
+          'value': 'vue',
+          'label': 'vue'
+        }, {
+          'value': 'react',
+          'label': 'react'
+        },
+        {
+          'value': 'php',
+          'label': 'php'
+        },
+        {
+          'value': 'mysql',
+          'label': 'mysql'
+        }
       ]
   }
 
