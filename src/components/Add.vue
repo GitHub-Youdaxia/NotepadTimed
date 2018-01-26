@@ -231,7 +231,6 @@ export default {
   mounted:function(){
     // 设置 main-content的高度=页面高度-main-header的高度
     var mainContentHeight = $(window).height()-$('.main-header').height()
-    console.log(mainContentHeight)
     $(".el-tabs__content").height(mainContentHeight-100)
     $(".el-carousel__container").height(mainContentHeight-100)
 
@@ -289,7 +288,6 @@ export default {
       this.classArr[editIndex].value=newClassName
       this.classArr[editIndex].label=newClassName
 
-      this.log(' this.classArr',this.classArr);
       store.set('classArr',this.classArr)
       this.gridData[editIndex].value=newClassName
       // var classArrLen=this.classArr.length
@@ -358,7 +356,6 @@ export default {
         }).then(() => {
             var className=this.getClassNameByIndex(index)
             store.remove(className);
-            this.log(' store.get(className)',store.get(className));
             this.editableTabs.splice(index,1)        
             this.hourArr.splice(index,1)
             this.timerArr.splice(index,1)
@@ -375,7 +372,6 @@ export default {
 
     },   
     copyCurrenClassAll: function(){
-      this.log('dd');
       var data=store.get(this.selectClass)
       if(data){
         if(data.length==0){
