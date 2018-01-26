@@ -81,24 +81,25 @@
         :visible.sync="dialogVisible"
         width="80%"
         :before-close="handleClose" center>
-    <quill-editor v-model='editContent' ref='editQuillEditor' :options='editorOption'>
-    </quill-editor>        
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="edit">确 定</el-button>
-        </span>
+          <quill-editor v-model='editContent' ref='editQuillEditor' :options='editorOption'>
+          </quill-editor>        
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="edit">确 定</el-button>
+          </span>
       </el-dialog>
       <!-- 分类管理对话框 -->
     <el-dialog title="分类管理" :visible.sync="dialogTableVisible"  height="150" center
     border>
-<el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-form-inline">
-  <el-form-item label="分类名称" prop="className">
-    <el-input size="mini" v-model="ruleForm.className" placeholder="填写分类名称"></el-input>
-  </el-form-item>
-  <el-form-item>
-    <el-button size="mini" type="primary" @click="onSubmit">添加</el-button>
-  </el-form-item>
-</el-form>    
+    <div class="ele-center">
+      <el-form  :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-form-inline">
+        <el-form-item label="分类名称" prop="className">
+          <el-input size="mini" v-model="ruleForm.className" placeholder="填写分类名称"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="mini" type="primary" @click="onSubmit">添加</el-button>
+        </el-form-item>
+      </el-form>    
       <el-table :data="gridData" height="500">
         <el-table-column property="value" label="类名" width="150"></el-table-column>
         <el-table-column property="num" label="信息数量" width="150"></el-table-column>
@@ -121,20 +122,21 @@
           </template>
         </el-table-column>        
       </el-table>
+      </div>
     <!-- 内层修改类名dialog -->
     <el-dialog
       width="30%"
       title="修改类名"
       :visible.sync="innerVisible"
       append-to-body>
-      <el-form :inline="true" :model="editClassName" :rules="rules2" ref="editClassName" class="demo-form-inline">
-        <el-form-item label="分类名称" prop="className">
-          <el-input size="mini" autofocus select v-model="editClassName.className" placeholder="填写分类名称"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button  size="mini" type="primary" @click="onEditClassName">修改</el-button>
-        </el-form-item>
-      </el-form>    
+        <el-form :inline="true" :model="editClassName" :rules="rules2" ref="editClassName" class="demo-form-inline">
+          <el-form-item label="分类名称" prop="className">
+            <el-input size="mini" autofocus select v-model="editClassName.className" placeholder="填写分类名称"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button  size="mini" type="primary" @click="onEditClassName">修改</el-button>
+          </el-form-item>
+        </el-form>    
     </el-dialog>      
     </el-dialog>      
   </div>
@@ -711,4 +713,5 @@ export default {
   .el-carousel__item:nth-child(4n+1) {
     background-color: #33a3dc;
   }
+  .ele-center{margin: 0 auto;width: 90%;}
 </style>
