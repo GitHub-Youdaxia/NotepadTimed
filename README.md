@@ -1,6 +1,15 @@
 # notepadtimed
-
-
+# 开发依赖包
+  "dependencies": {
+    "element-ui": "^2.0.11",
+    "jquery": "^3.3.1",
+    "storejs": "^1.0.16",
+    "vue": "^2.5.2",
+    "vue-clipboard2": "^0.0.8",
+    "vue-quill-editor": "^3.0.4",
+    "vue-router": "^3.0.1"
+  },
+# 使用localstorage存储数据到本地，storejs封装原生的localstorage方法
 > A Vue.js project
 
 ## Build Setup

@@ -82,7 +82,7 @@ p{  -webkit-margin-before:0;
  /*定义滑块 内阴影+圆角*/   
  .el-tabs__content::-webkit-scrollbar-thumb  {  border-radius: 10px;box-shadow: inset 0 0 6px rgba(0,0,0,.3);  
   background-color: #5CACEE;}
-  .el-card__header{padding: 2px 4px}
+  .el-card__header{padding: 2px 4px !important}
 
 
 </style>
