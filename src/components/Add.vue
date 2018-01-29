@@ -660,9 +660,6 @@ export default {
     share(classIndex,infoIndex){
       var className=this.getClassNameByIndex(classIndex)
       var currentData=store.get(className)
-      var copyValue = currentData[infoIndex] 
-      var reg = /[\u4e00-\u9fa5]/g;  
-      var copyValues = copyValue.match(reg);
       return currentData[infoIndex].replace(/<[^>]+>/g,"") 
     },
     handleClose(done) {
