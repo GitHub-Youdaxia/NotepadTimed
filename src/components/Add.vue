@@ -192,7 +192,7 @@ export default {
       content: '',
       editContent:'',
       classArr: store.get('classArr')?store.get('classArr'):[],
-      selectClass: 'default',
+      selectClass: store.get('classArr')?store.get('classArr')[0].value:[],
       editorOption: {
         theme: 'snow',
         placeholder: '输入任何内容，支持html',
@@ -225,7 +225,7 @@ export default {
     }
   },
   created:function(){
-   
+
    this.getHourArr()
    this.getTimerArr()
 
@@ -661,7 +661,6 @@ export default {
       var className=this.getClassNameByIndex(classIndex)
       var currentData=store.get(className)
       if(currentData[infoIndex]>0){
-        this.log(currentData[infoIndex])
        return currentData[infoIndex].replace(/<[^>]+>/g,"") 
       }
     },

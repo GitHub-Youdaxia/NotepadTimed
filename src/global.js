@@ -40,7 +40,7 @@ export default{
       myWindow.moveTo(positionLeft, positionHeight)
       myWindow.focus()
       myWindow.setTimeout(function () {
-        myWindow.alert()
+        myWindow.showModalDialog(myWindow.location.href, 'dialogWidth=100px;dialogHeight=100px')
       }, time)
       $(myWindow.document.body).attr('scrolling', 'no')
       $(myWindow.document.body).append('<style>' + cssStr + '</style>')
@@ -49,7 +49,8 @@ export default{
       // console.log(content)
       // window.showModalDialog('',content)
     }
-    Vue.prototype.openWinCarousel = function (content) {
+    // 暂时没有用到
+    Vue.prototype.openWinCarousel = function (content, time) {
       // white-space: pre-wrap; word-break: break-all;word-wrap: break-word;
       var width = 600
       var height = 365
@@ -66,6 +67,7 @@ export default{
       $(myWindow.document.body).append('<style>' + cssStr + '</style>')
       var jsStr = 'window.setTimeout(function(){ window.close(); },10000)'
       $(myWindow.document.body).append('<div id="xmp" style="display:block;min-height:100%;padding:10px 10px 100px 10px;height:100%;">' + content + '</div>')
+      myWindow.showModalDialog(myWindow.location.href, 'dialogWidth=200px;dialogHeight=100px')
       // console.log(content)
       // window.showModalDialog('',content)
     }
