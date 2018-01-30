@@ -26,7 +26,7 @@ export default{
         console.log(JSON.stringify(args[1]))
       }
     }
-    Vue.prototype.openWin = function (content) {
+    Vue.prototype.openWin = function (content, time) {
       // white-space: pre-wrap; word-break: break-all;word-wrap: break-word;
       var width = 600
       var height = 365
@@ -39,6 +39,9 @@ export default{
       var myWindow = window.open('', '_blank', 'width=' + width + ',height=' + height + '')
       myWindow.moveTo(positionLeft, positionHeight)
       myWindow.focus()
+      myWindow.setTimeout(function () {
+        myWindow.alert()
+      }, time)
       $(myWindow.document.body).attr('scrolling', 'no')
       $(myWindow.document.body).append('<style>' + cssStr + '</style>')
       var jsStr = 'window.setTimeout(function(){ window.close(); },10000)'

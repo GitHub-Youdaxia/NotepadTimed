@@ -503,7 +503,7 @@ export default {
         },time*60*60*1000)
       }else{
         this.timerArr[classIndex][infoIndex]=setTimeout(function(){
-           self.openWin(info)
+           self.openWin(info,time*60*60*1000)
          $(event.target).parents('.el-button-group').find('.cancel').each(function(){
           $(this).click()
         })          
@@ -660,7 +660,10 @@ export default {
     share(classIndex,infoIndex){
       var className=this.getClassNameByIndex(classIndex)
       var currentData=store.get(className)
-      return currentData[infoIndex].replace(/<[^>]+>/g,"") 
+      if(currentData[infoIndex]>0){
+        this.log(currentData[infoIndex])
+       return currentData[infoIndex].replace(/<[^>]+>/g,"") 
+      }
     },
     handleClose(done) {
       this.$confirm('确认关闭？')
