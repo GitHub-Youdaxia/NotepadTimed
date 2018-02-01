@@ -9,7 +9,7 @@
 </template>
 
 <script>
-console.clear()
+// console.clear()
 var store = require('storejs')
 export default {
   name: 'App',
@@ -66,7 +66,7 @@ p{  -webkit-margin-before:0;
 .clearfix{zoom:1;}
 .fixed{position: fixed;left:0;top:0;width: 100%;z-index: 1000}
 /* 显示滚动条 */
-.el-tabs__content{overflow: auto}
+.el-tabs__content,.el-table__body-wrapper{overflow: auto !important;}
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 .el-table__body-wrapper::-webkit-scrollbar{width: 8px;height: 8px;background-color: #fff;}

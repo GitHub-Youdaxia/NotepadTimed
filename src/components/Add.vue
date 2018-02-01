@@ -512,14 +512,17 @@ export default {
 
     },
     cancel: function(classIndex,infoIndex,event){
+
+      clearTimeout(this.timerArr[classIndex][infoIndex])
+      clearInterval(this.timerArr[classIndex][infoIndex])
+      console.log('清除定时')      
       // this.btn=false
       if (event) {
         $(event.target).parents('.el-button-group').find('.start').each(function(){
           $(this).removeClass('is-disabled').attr('disabled',false)
         })
       }      
-      clearTimeout(this.timerArr[classIndex][infoIndex])
-      clearInterval(this.timerArr[classIndex][infoIndex])
+
     },
     getInfo:function(classIndex,infoIndex){
       var className=this.getClassNameByIndex(classIndex)
@@ -630,12 +633,16 @@ export default {
       this.infoIndex=infoIndex  
     },
     remove(classIndex,infoIndex){
+
         this.$confirm('确定删除此消息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+         // 先清除定时
 
+        this.cancel(classIndex,infoIndex) 
+  
         var className=this.getClassNameByIndex(classIndex)
         var currentData=store.get(className)
         currentData.splice(infoIndex, 1);
@@ -643,7 +650,7 @@ export default {
         this.refresh(className)
         this.hourArr[classIndex].splice(infoIndex, 1);
         this.timerArr[classIndex].splice(infoIndex, 1);
-                  
+           this.log('已删除定时返回数'); 
           this.$message({
             type: 'success',
             message: '删除成功!'
