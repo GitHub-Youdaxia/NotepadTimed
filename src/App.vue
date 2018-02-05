@@ -84,5 +84,8 @@ p{  -webkit-margin-before:0;
   background-color: #5CACEE;}
   .el-card__header{padding: 2px 4px !important}
 
-
+/* 控制编辑器的最大高度*/
+.ql-editor {
+      max-height: 500px !important;
+    } 
 </style>

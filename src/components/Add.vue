@@ -1,8 +1,6 @@
 <template>
   <div class='main'>
     <div class="main-header">
-    <quill-editor class="add-editor" v-model='content' ref='quillEditorA' :options='editorOption' @blur='onEditorBlur($event)' @focus='onEditorFocus($event)' @ready='onEditorReady($event)'>
-    </quill-editor>
     <div class="add">
         <el-button-group >
           <el-select size='medium' @change='classChange' v-model="selectClass" placeholder="请选择添加分类">
@@ -29,7 +27,10 @@
            <el-progress :percentage='percentage'></el-progress>       
          </div>  
        </el-button-group >         
-    </div>
+    </div>      
+    <quill-editor class="add-editor" v-model='content' ref='quillEditorA' :options='editorOption' @blur='onEditorBlur($event)' @focus='onEditorFocus($event)' @ready='onEditorReady($event)'>
+    </quill-editor>
+
     </div>
       <div class="main-content">
         <el-tabs v-model="editableTabsValue" type="border-card" @tab-click='tabChange' class="main-content-tab">
@@ -199,11 +200,13 @@ export default {
         modules: {
           toolbar: [
             ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
             [{
               list: 'ordered'
             }, {
               list: 'bullet'
             }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
             [{
               header: [1, 2, 3, 4, 5, 6, false]
             }],
@@ -218,7 +221,8 @@ export default {
             [{
               align: ['']
             }],
-            ['clean']
+            ['clean'],
+            ['link', 'image', 'video']
           ]
         }
       }
@@ -646,12 +650,14 @@ export default {
         var className=this.getClassNameByIndex(classIndex)
         var currentData=store.get(className)
         currentData.splice(infoIndex, 1);
+        store.remove(className);
         store.set(className,currentData)
         this.refresh(className)
         this.hourArr[classIndex].splice(infoIndex, 1);
         this.timerArr[classIndex].splice(infoIndex, 1);
+        this.getPercentage()
            this.log('已删除定时返回数'); 
-          this.$message({
+        this.$message({
             type: 'success',
             message: '删除成功!'
           });
@@ -720,4 +726,11 @@ export default {
     background-color: #33a3dc;
   }
   .ele-center{margin: 0 auto;width: 90%;}
+/* .quill-editor {
+  max-height:500px;
+}  
+ .quill-editor .ql-container {
+   overflow: auto;
+  } */
+
 </style>
