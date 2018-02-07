@@ -12,7 +12,9 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import global from './global'
 import store from 'storejs'
+import highlightJs from 'highlight.js'
 import VueClipboard from 'vue-clipboard2'
+Vue.use(highlightJs)
 Vue.use(VueClipboard)
 Vue.use(store)
 Vue.use(global)

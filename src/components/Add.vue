@@ -1,6 +1,7 @@
 <template>
   <div class='main'>
     <div class="main-header">
+      <aaa></aaa>
     <div class="add">
         <el-button-group >
           <el-select size='medium' @change='classChange' v-model="selectClass" placeholder="请选择添加分类">
@@ -155,6 +156,8 @@
       //     });
       //   },time*60*60*1000)
 //固定顶部
+import hljs from 'highlight.js'
+// import aaa from './aaa'
 var store = require('storejs')
 export default {
   name: 'add',
@@ -223,11 +226,17 @@ export default {
             }],
             ['clean'],
             ['link', 'image', 'video']
-          ]
+          ],
+            syntax: {
+              highlight: text => hljs.highlightAuto(text).value
+            }
         }
       }
     }
   },
+  // components:{
+  //   'aaa':aaa
+  // },
   created:function(){
 
    this.getHourArr()
@@ -282,7 +291,8 @@ export default {
       if(flag){
         this.$message({
           message: '修改失败！已存在分类"'+newClassName+'"不能重复添加',
-          type: 'warning'
+          type: 'warning',
+          duration:2000
         });        
         return false
       } 
@@ -308,7 +318,8 @@ export default {
 
       this.$message({
           message: '分类修改成功',
-          type: 'success'
+          type: 'success',
+          duration:2000
         }); 
       this.innerVisible=false           
     },
@@ -326,7 +337,8 @@ export default {
       if(flag){
         this.$message({
           message: '添加失败！已存在分类"'+className+'"不能重复添加',
-          type: 'warning'
+          type: 'warning',
+          duration:2000
         });        
         return false
       }
@@ -345,7 +357,8 @@ export default {
       //     })
       this.$message({
           message: '分类添加成功',
-          type: 'success'
+          type: 'success',
+          duration:2000
         });  
     },
     editRow(index, rows) {
@@ -358,7 +371,8 @@ export default {
         this.$confirm('确定删除分类"'+this.getClassNameByIndex(index)+'"?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
+          duration:2000
         }).then(() => {
             var className=this.getClassNameByIndex(index)
             store.remove(className);
@@ -383,7 +397,8 @@ export default {
         if(data.length==0){
           // this.$message({
           //   message: '分类"'+this.selectClass+'"数据是空的',
-          //   type: 'warning'
+          //   type: 'warning',
+          //duration:2000
           // });               
           return
         }
@@ -418,6 +433,7 @@ export default {
                   
           this.$message({
             type: 'success',
+            duration:2000,
             message: '删除成功!'
           });
         }).catch(() => {
@@ -536,13 +552,15 @@ export default {
     onCopy : function(){
           this.$message({
           message: '消息复制成功',
-          type: 'success'
+          type: 'success',
+          duration:2000
         });  
     },
     onCopyError : function(){
           this.$message({
           message: '消息复制失败',
-          type: 'warning'
+          type: 'warning',
+          duration:2000
         });  
     },
     tabChange : function(){
@@ -561,7 +579,8 @@ export default {
       if(this.content.length==0){
         this.$message({
           message: '消息不能为空',
-          type: 'warning'
+          type: 'warning',
+          duration:2000
         });
         return
       }
@@ -574,7 +593,8 @@ export default {
       }
       this.$message({
         message: '消息添加成功',
-        type: 'success'
+        type: 'success',
+        duration:2000
       });
       //重新渲染页面
       this.refresh(this.selectClass)
@@ -626,6 +646,7 @@ export default {
         
         this.$message({
           type: 'success',
+          duration:2000,
           message: '修改成功!'
         });
     },
@@ -641,7 +662,8 @@ export default {
         this.$confirm('确定删除此消息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
+          duration:2000
         }).then(() => {
          // 先清除定时
 
@@ -659,6 +681,7 @@ export default {
            this.log('已删除定时返回数'); 
         this.$message({
             type: 'success',
+            duration:2000,
             message: '删除成功!'
           });
         }).catch(() => {

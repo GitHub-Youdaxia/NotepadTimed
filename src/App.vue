@@ -86,6 +86,13 @@ p{  -webkit-margin-before:0;
 
 /* 控制编辑器的最大高度*/
 .ql-editor {
-      max-height: 500px !important;
-    } 
+    max-height: 500px !important;
+  } 
+/*控制tab选项的高亮*/
+.el-tabs__item.is-active{
+  transform: scale(1.2);
+  color: #409EFF !important;
+  transition:all 0.1s !important;
+  -webkit-transition:all 0.1s !important; /* Safari */
+}
 </style>
