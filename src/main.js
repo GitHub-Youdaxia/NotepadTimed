@@ -14,6 +14,8 @@ import global from './global'
 import store from 'storejs'
 import highlightJs from 'highlight.js'
 import VueClipboard from 'vue-clipboard2'
+import VueResource from 'vue-resource'
+Vue.use(VueResource)
 Vue.use(highlightJs)
 Vue.use(VueClipboard)
 Vue.use(store)

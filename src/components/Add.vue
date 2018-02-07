@@ -1,7 +1,6 @@
 <template>
   <div class='main'>
     <div class="main-header">
-      <aaa></aaa>
     <div class="add">
         <el-button-group >
           <el-select size='medium' @change='classChange' v-model="selectClass" placeholder="请选择添加分类">
@@ -252,7 +251,9 @@ export default {
     var self=this
     store.onStorage(function(key,val){
       self.getPercentage()
-  })    
+  })
+  //
+
   },
   computed: {
     editableTabs:function(){
@@ -278,6 +279,15 @@ export default {
     }
   },
   methods: {
+    getGridData(){
+      var classArrLen=this.classArr.length
+      for(var i=0;i<classArrLen;i++){
+        if(store.get(this.getClassNameByIndex(i))){
+          this.classArr[i]['num']=store.get(this.getClassNameByIndex(i)).length
+        }
+      }
+      return  this.classArr      
+    },
     onEditClassName(){
       var newClassName= this.editClassName.className
       var len=this.classArr.length 
@@ -471,6 +481,8 @@ export default {
     },
     classManagement: function(){
       this.dialogTableVisible=true
+      this.gridData=this.getGridData()
+
     },
     getTimerArr: function(){
       var arr=[]
@@ -598,6 +610,13 @@ export default {
       });
       //重新渲染页面
       this.refresh(this.selectClass)
+
+      this.$http.post('/api/user/addUser', {
+            username: 'name',
+            age: 11
+          },{}).then((response) => {
+            console.log(response);
+          })      
     },
     refresh (selectClass){
       var index=this.getIndexByClassName(selectClass);
@@ -677,6 +696,7 @@ export default {
         this.refresh(className)
         this.hourArr[classIndex].splice(infoIndex, 1);
         this.timerArr[classIndex].splice(infoIndex, 1);
+
         this.getPercentage()
            this.log('已删除定时返回数'); 
         this.$message({
