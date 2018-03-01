@@ -1,5 +1,5 @@
 <template>
-  <div class='main'>
+  <div class='main' >
     <div class="main-header">
     <div class="add">
         <el-button-group >
@@ -13,11 +13,11 @@
           </el-select>            
       </el-button-group>      
         <el-button-group >         
-        <el-button size='medium' @click='addInfo' title='默认添加到default分类' type="primary">添加</el-button>
+        <el-button size='medium' id="addBtn"  @click='addInfo' title='快键键：ctrl+enter' type="primary">添加</el-button>
         <el-button size='medium' v-clipboard:copy="copyCurrenClassAll()" v-clipboard:success="onCopy" v-clipboard:error="onCopyError"  title='复制当前选择分类的所有信息' type="primary">复制全部</el-button>
         <el-button size='medium' @click='deleteCurrenClassAll' title='删除当前选择分类的所有信息' type="primary">删除全部</el-button>
-        <el-button size='medium' @click='startCarousel' title='开启每个分类所有信息轮播' type="primary">开启轮播</el-button>
-        <el-button size='medium' @click='endCarousel' title='关闭每个分类所有信息轮播' type="primary">关闭轮播</el-button>
+        <el-button size='medium' id="startCarousel" @click='startCarousel' title='开启每个分类所有信息轮播,shift+r' type="primary">开启轮播</el-button>
+        <el-button size='medium' id="endCarousel" @click='endCarousel' title='关闭每个分类所有信息轮播,shift+e' type="primary">关闭轮播</el-button>
       </el-button-group>
       <el-button-group style="float:right;margin-right:10px">         
         <el-button size='medium' @click='classManagement' title='分类管理' type="primary">分类管理</el-button>
@@ -40,7 +40,7 @@
             :label="item.title"
             :name="item.name"
           >
-            <el-carousel :interval="10000" trigger="click" class="info-carousel" style="display:none" height="500px">
+            <el-carousel ref=carousel :interval="10000" trigger="click" class="info-carousel" style="display:none" height="500px">
               <el-carousel-item v-for="(o,infoIndex) in item.content" :key="infoIndex">
                 <div v-html="o"></div>
               </el-carousel-item>
@@ -253,7 +253,40 @@ export default {
       self.getPercentage()
   })
   //
+        // if (event.keyCode==37){
+      //   self.$refs.carousel.prev()
+      // }
+      // if (event.keyCode==39){
+      //   self.$refs.carousel.next()
+      // }
+    $(document).keypress(function (e) {
 
+        if (e.ctrlKey && e.which == 10) {
+          document.getElementById("addBtn").click();
+        }
+        if (e.shiftKey && e.which == 82) {
+          document.getElementById("startCarousel").click();
+        }
+        if (e.shiftKey && e.which == 69) {
+          document.getElementById("endCarousel").click();
+        }
+
+    })
+    console.log(self.$refs)
+    $(document).keydown(function (e) {
+        if (event.keyCode==37){
+        self.$refs.carousel[self.getIndexByClassName(self.selectClass)].prev()
+      }
+      if (event.keyCode==39){
+        self.$refs.carousel[self.getIndexByClassName(self.selectClass)].next()
+      }
+
+    })
+    $(document).keyup(function (e) {
+        if (e.ctrlKey && e.which == 13) {
+                    document.getElementById("addBtn").click();
+        }
+    })
   },
   computed: {
     editableTabs:function(){
