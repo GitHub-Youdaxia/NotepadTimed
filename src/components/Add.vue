@@ -259,7 +259,7 @@ export default {
       // if (event.keyCode==39){
       //   self.$refs.carousel.next()
       // }
-    $(document).keypress(function (e) {
+    $(document).keydown(function (e) {
 
         if (e.ctrlKey && e.which == 10) {
           document.getElementById("addBtn").click();
@@ -273,18 +273,40 @@ export default {
 
     })
     console.log(self.$refs)
+    var classLength=self.editableTabs.length
     $(document).keydown(function (e) {
-        if (event.keyCode==37){
-        self.$refs.carousel[self.getIndexByClassName(self.selectClass)].prev()
+        if (event.keyCode==38){
+          if(self.$refs.carousel[self.getIndexByClassName(self.selectClass)]){
+            self.$refs.carousel[self.getIndexByClassName(self.selectClass)].prev()
+          }
+      }
+      if (event.keyCode==40){
+        if(self.$refs.carousel[self.getIndexByClassName(self.selectClass)]){
+        self.$refs.carousel[self.getIndexByClassName(self.selectClass)].next()
+        }
       }
       if (event.keyCode==39){
-        self.$refs.carousel[self.getIndexByClassName(self.selectClass)].next()
-      }
+        var nextClassIndex=self.editableTabsValue*1+1+''
+         if(nextClassIndex>classLength-1){
+          nextClassIndex='0'
+        }
+        self.editableTabsValue=nextClassIndex
+        self.selectClass=self.getClassNameByIndex(nextClassIndex)
 
+      }
+      if (event.keyCode==37){
+        var nextClassIndex=self.editableTabsValue*1-1+''
+         if(nextClassIndex<0){
+          nextClassIndex=classLength-1+''
+        }
+        self.editableTabsValue=nextClassIndex
+        self.selectClass=self.getClassNameByIndex(nextClassIndex)
+
+      }
     })
     $(document).keyup(function (e) {
         if (e.ctrlKey && e.which == 13) {
-                    document.getElementById("addBtn").click();
+          document.getElementById("addBtn").click();
         }
     })
   },
