@@ -3,7 +3,7 @@
     <div class="main-header">
     <div class="add">
         <el-button-group >
-          <el-select size='mini' style="width:120px" @change='classChange' v-model="selectClass" placeholder="请选择添加分类">
+          <el-select size='medium'  @change='classChange' v-model="selectClass" placeholder="请选择添加分类">
             <el-option
               v-for="item in classArr"
               :key="item.value"
@@ -13,14 +13,16 @@
           </el-select>            
       </el-button-group>      
         <el-button-group >         
-        <el-button size='mini' id="addBtn"  @click='addInfo' title='快键键：ctrl+enter' type="primary">添加</el-button>
-        <el-button size='mini' v-clipboard:copy="copyCurrenClassAll()" v-clipboard:success="onCopy" v-clipboard:error="onCopyError"  title='复制当前选择分类的所有信息' type="primary">复制全部</el-button>
-        <el-button size='mini' @click='deleteCurrenClassAll' title='删除当前选择分类的所有信息' type="primary">删除全部</el-button>
-        <el-button size='mini' id="startCarousel" @click='startCarousel' title='开启每个分类所有信息轮播,shift+r' type="primary">开启轮播</el-button>
-        <el-button size='mini' id="endCarousel" @click='endCarousel' title='关闭每个分类所有信息轮播,shift+e' type="primary">关闭轮播</el-button>
-        <el-button size='mini' @click='classManagement' title='分类管理'  type="primary">分类管理</el-button>
+        <el-button size='medium' id="addBtn"  @click='addInfo' title='快键键：ctrl+enter' type="primary">添加</el-button>
+        <el-button size='medium' v-clipboard:copy="copyCurrenClassAll()" v-clipboard:success="onCopy" v-clipboard:error="onCopyError"  title='复制当前选择分类的所有信息' type="primary">复制全部</el-button>
+        <el-button size='medium' @click='deleteCurrenClassAll' title='删除当前选择分类的所有信息' type="primary">删除全部</el-button>
+        <el-button size='medium' id="startCarousel" @click='startCarousel' title='开启每个分类所有信息轮播,shift+r' type="primary">开启轮播</el-button>
+        <el-button size='medium' id="endCarousel" @click='endCarousel' title='关闭每个分类所有信息轮播,shift+e' type="primary">关闭轮播</el-button>
       </el-button-group>
-
+            <el-button-group style="float:right;margin-right:10px;" >
+                    <el-button size='medium' @click='classManagement' title='分类管理'  type="primary">分类管理</el-button>
+              
+            </el-button-group>
        <el-button-group title="本地存储空间使用百分比">
          <div class="progress">
            <el-progress :percentage='percentage'></el-progress>       
