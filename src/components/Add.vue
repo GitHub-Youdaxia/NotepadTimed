@@ -3,7 +3,7 @@
     <div class="main-header">
     <div class="add">
         <el-button-group >
-          <el-select size='medium' @change='classChange' v-model="selectClass" placeholder="请选择添加分类">
+          <el-select size='mini' style="width:120px" @change='classChange' v-model="selectClass" placeholder="请选择添加分类">
             <el-option
               v-for="item in classArr"
               :key="item.value"
@@ -13,15 +13,14 @@
           </el-select>            
       </el-button-group>      
         <el-button-group >         
-        <el-button size='medium' id="addBtn"  @click='addInfo' title='快键键：ctrl+enter' type="primary">添加</el-button>
-        <el-button size='medium' v-clipboard:copy="copyCurrenClassAll()" v-clipboard:success="onCopy" v-clipboard:error="onCopyError"  title='复制当前选择分类的所有信息' type="primary">复制全部</el-button>
-        <el-button size='medium' @click='deleteCurrenClassAll' title='删除当前选择分类的所有信息' type="primary">删除全部</el-button>
-        <el-button size='medium' id="startCarousel" @click='startCarousel' title='开启每个分类所有信息轮播,shift+r' type="primary">开启轮播</el-button>
-        <el-button size='medium' id="endCarousel" @click='endCarousel' title='关闭每个分类所有信息轮播,shift+e' type="primary">关闭轮播</el-button>
+        <el-button size='mini' id="addBtn"  @click='addInfo' title='快键键：ctrl+enter' type="primary">添加</el-button>
+        <el-button size='mini' v-clipboard:copy="copyCurrenClassAll()" v-clipboard:success="onCopy" v-clipboard:error="onCopyError"  title='复制当前选择分类的所有信息' type="primary">复制全部</el-button>
+        <el-button size='mini' @click='deleteCurrenClassAll' title='删除当前选择分类的所有信息' type="primary">删除全部</el-button>
+        <el-button size='mini' id="startCarousel" @click='startCarousel' title='开启每个分类所有信息轮播,shift+r' type="primary">开启轮播</el-button>
+        <el-button size='mini' id="endCarousel" @click='endCarousel' title='关闭每个分类所有信息轮播,shift+e' type="primary">关闭轮播</el-button>
+        <el-button size='mini' @click='classManagement' title='分类管理'  type="primary">分类管理</el-button>
       </el-button-group>
-      <el-button-group style="float:right;margin-right:10px">         
-        <el-button size='medium' @click='classManagement' title='分类管理' type="primary">分类管理</el-button>
-      </el-button-group>
+
        <el-button-group title="本地存储空间使用百分比">
          <div class="progress">
            <el-progress :percentage='percentage'></el-progress>       
@@ -243,22 +242,13 @@ export default {
 
   },
   mounted:function(){
-    // 设置 main-content的高度=页面高度-main-header的高度
-    var mainContentHeight = $(window).height()-$('.main-header').height()
-    $(".el-tabs__content").height(mainContentHeight-100)
-    $(".el-carousel__container").height(mainContentHeight-100)
 
     var self=this
     store.onStorage(function(key,val){
       self.getPercentage()
   })
-  //
-        // if (event.keyCode==37){
-      //   self.$refs.carousel.prev()
-      // }
-      // if (event.keyCode==39){
-      //   self.$refs.carousel.next()
-      // }
+    //设置内容高度
+    self.resetView()
     $(document).keydown(function (e) {
 
         if (e.ctrlKey && e.which == 10) {
@@ -309,6 +299,9 @@ export default {
           document.getElementById("addBtn").click();
         }
     })
+  $(window).resize(function(){
+       self.resetView() 
+  });    
   },
   computed: {
     editableTabs:function(){
@@ -334,6 +327,12 @@ export default {
     }
   },
   methods: {
+    resetView(){
+       // 设置 main-content的高度=页面高度-main-header的高度
+    var mainContentHeight = $(window).height()-$('.main-header').height()
+    $(".el-tabs__content").height(mainContentHeight-100)
+    $(".el-carousel__container").height(mainContentHeight-100) 
+    },
     getGridData(){
       var classArrLen=this.classArr.length
       for(var i=0;i<classArrLen;i++){
@@ -354,7 +353,7 @@ export default {
         }
       }
       if(flag){
-        this.$message({
+        this.$notify({
           message: '修改失败！已存在分类"'+newClassName+'"不能重复添加',
           type: 'warning',
           duration:2000
@@ -381,7 +380,7 @@ export default {
       // this.hourArr.push([])
       // this.timerArr.push([]) 
 
-      this.$message({
+      this.$notify({
           message: '分类修改成功',
           type: 'success',
           duration:2000
@@ -400,7 +399,7 @@ export default {
         }
       }
       if(flag){
-        this.$message({
+        this.$notify({
           message: '添加失败！已存在分类"'+className+'"不能重复添加',
           type: 'warning',
           duration:2000
@@ -420,7 +419,7 @@ export default {
       //       name: len+'',
       //       content: []
       //     })
-      this.$message({
+      this.$notify({
           message: '分类添加成功',
           type: 'success',
           duration:2000
@@ -448,7 +447,7 @@ export default {
             this.classArr.splice(index, 1);
             store.set('classArr',this.classArr)
         }).catch(() => {
-          this.$message({
+          this.$notify({
             type: 'info',
             message: '已取消删除'
           });          
@@ -460,7 +459,7 @@ export default {
       var data=store.get(this.selectClass)
       if(data){
         if(data.length==0){
-          // this.$message({
+          // this.$notify({
           //   message: '分类"'+this.selectClass+'"数据是空的',
           //   type: 'warning',
           //duration:2000
@@ -479,7 +478,7 @@ export default {
     },
     deleteCurrenClassAll: function(){
         if(store.get(this.selectClass).length==0){
-            this.$message({
+            this.$notify({
               type: 'info',
               message: '分类："'+this.selectClass+'"数据是空的'
             });      
@@ -496,26 +495,26 @@ export default {
         this.hourArr[classIndex]=[]
         this.timerArr[classIndex]=[]
                   
-          this.$message({
+          this.$notify({
             type: 'success',
             duration:2000,
             message: '删除成功!'
           });
         }).catch(() => {
-          this.$message({
+          this.$notify({
             type: 'info',
             message: '已取消删除'
           });          
         });
     },
     startCarousel: function(){
-        if(store.get(this.selectClass).length==0){
-            this.$message({
-              type: 'info',
-              message: '分类："'+this.selectClass+'"数据是空的'
-            });      
-            return 
-        }      
+        // if(store.get(this.selectClass).length==0){
+        //     this.$notify({
+        //       type: 'info',
+        //       message: '分类："'+this.selectClass+'"数据是空的'
+        //     });      
+        //     return 
+        // }      
       $('.info-carousel').each(function(){
         $(this).show()
       })
@@ -617,14 +616,14 @@ export default {
       return info
     },
     onCopy : function(){
-          this.$message({
+          this.$notify({
           message: '消息复制成功',
           type: 'success',
           duration:2000
         });  
     },
     onCopyError : function(){
-          this.$message({
+          this.$notify({
           message: '消息复制失败',
           type: 'warning',
           duration:2000
@@ -644,7 +643,7 @@ export default {
     },
     addInfo () {
       if(this.content.length==0){
-        this.$message({
+        this.$notify({
           message: '消息不能为空',
           type: 'warning',
           duration:2000
@@ -654,11 +653,11 @@ export default {
       if(this.selectClass.length==0){
         //没有选择分类，则添加到default分类
         this.selectClass='default';
-        this.save( this.selectClass)
+        this.save(this.selectClass)
       }else{
         this.save(this.selectClass)
       }
-      this.$message({
+      this.$notify({
         message: '消息添加成功',
         type: 'success',
         duration:2000
@@ -718,7 +717,7 @@ export default {
         this.editableTabsValue=''
         this.editableTabsValue=this.classIndex+''        
         
-        this.$message({
+        this.$notify({
           type: 'success',
           duration:2000,
           message: '修改成功!'
@@ -754,13 +753,13 @@ export default {
 
         this.getPercentage()
            this.log('已删除定时返回数'); 
-        this.$message({
+        this.$notify({
             type: 'success',
             duration:2000,
             message: '删除成功!'
           });
         }).catch(() => {
-          this.$message({
+          this.$notify({
             type: 'info',
             message: '已取消删除'
           });          
