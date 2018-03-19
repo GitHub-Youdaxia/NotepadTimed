@@ -1,7 +1,9 @@
 <template>
   <div class='main' >
     <div class="main-header">
+  
     <div class="add">
+          <audio  ref=audioPlay id="audioPlay" src="/static/audio/iphoneqq.mp3"></audio>
         <el-button-group >
           <el-select size='medium'  @change='classChange' v-model="selectClass" placeholder="请选择添加分类">
             <el-option
@@ -587,10 +589,16 @@ export default {
       var self=this
       if(type==0){
       this.timerArr[classIndex][infoIndex]=setInterval(function(){
+        var audioPlay = document.getElementById('audioPlay')
+        // 在这里建议使用原生来获取，使用jQuery会有点问题
+        audioPlay.play()        
          self.openWin(info)
         },time*60*60*1000)
       }else{
         this.timerArr[classIndex][infoIndex]=setTimeout(function(){
+         var audioPlay = document.getElementById('audioPlay')
+        // 在这里建议使用原生来获取，使用jQuery会有点问题
+        audioPlay.play() 
            self.openWin(info,time*60*60*1000)
          $(event.target).parents('.el-button-group').find('.cancel').each(function(){
           $(this).click()
@@ -833,5 +841,5 @@ export default {
  .quill-editor .ql-container {
    overflow: auto;
   } */
-
+#audioPlay{display: block !important;width: 100px;height: 30px;position: fixed;top:0;left:0;}
 </style>
