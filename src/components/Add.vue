@@ -775,6 +775,8 @@ export default {
       if(currentData[infoIndex]>0){
        return currentData[infoIndex].replace(/<[^>]+>/g,"") 
       }
+       return currentData[infoIndex].replace(/<[^>]+>/g,"") 
+
     },
     handleClose(done) {
       this.$confirm('确认关闭？')
