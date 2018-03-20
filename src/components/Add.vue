@@ -3,7 +3,6 @@
     <div class="main-header">
   
     <div class="add">
-          <audio  ref=audioPlay id="audioPlay" src="/static/audio/iphoneqq.mp3"></audio>
         <el-button-group >
           <el-select size='medium'  @change='classChange' v-model="selectClass" placeholder="请选择添加分类">
             <el-option
@@ -29,7 +28,9 @@
          <div class="progress">
            <el-progress :percentage='percentage'></el-progress>       
          </div>  
-       </el-button-group >         
+       </el-button-group > 
+       <audio  controls="controls"  id="audioPlay" src="/static/audio/iphoneqq.mp3"></audio>
+        
     </div>      
     <quill-editor class="add-editor" v-model='content' ref='quillEditorA' :options='editorOption' @blur='onEditorBlur($event)' @focus='onEditorFocus($event)' @ready='onEditorReady($event)'>
     </quill-editor>
@@ -841,5 +842,6 @@ export default {
  .quill-editor .ql-container {
    overflow: auto;
   } */
-#audioPlay{display: block !important;width: 100px;height: 30px;position: fixed;top:0;left:0;}
+/* #audioPlay{display: inline-block !important;width: 100px;height: 30px;display: none;} */
+ #audioPlay{display: none ;}
 </style>
