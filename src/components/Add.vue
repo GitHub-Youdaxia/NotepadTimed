@@ -29,7 +29,7 @@
            <el-progress :percentage='percentage'></el-progress>       
          </div>  
        </el-button-group > 
-       <audio  controls="controls"  id="audioPlay" src="../../static/audio/iphoneqq.mp3"></audio>
+       <audio  controls="controls"  id="audioPlay" src="/NotepadTimed/static/audio/iphoneqq.mp3"></audio>
         
     </div>      
     <quill-editor class="add-editor" v-model='content' ref='quillEditorA' :options='editorOption' @blur='onEditorBlur($event)' @focus='onEditorFocus($event)' @ready='onEditorReady($event)'>
