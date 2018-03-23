@@ -22,7 +22,7 @@
 ### 分类管理
  查看分类的详细信息，添加，修改，删除分类。
 
-##安装运行
+## 安装运行
 ``` bash
 # install dependencies
 cnpm install
