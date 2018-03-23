@@ -1,15 +1,15 @@
 ## notepadtimed 定时提醒
 ## 开发依赖包
-  "dependencies": {
-    "element-ui": "^2.0.11",
-    "jquery": "^3.3.1",
-    "storejs": "^1.0.16",
-    "vue": "^2.5.2",
-    "vue-clipboard2": "^0.0.8",
-    "vue-quill-editor": "^3.0.4",
-    "vue-resource": "^1.3.5",
-    "vue-router": "^3.0.1"
-  },
+ > *  "dependencies": {
+ > *    "element-ui": "^2.0.11",
+ > *    "jquery": "^3.3.1",
+ > *    "storejs": "^1.0.16",
+ > *    "vue": "^2.5.2",
+ > *    "vue-clipboard2": "^0.0.8",
+ > *    "vue-quill-editor": "^3.0.4",
+ > *    "vue-resource": "^1.3.5",
+ > *    "vue-router": "^3.0.1"
+ > *  },
 ## 功能介绍
 ### 添加
 富文本编辑后的信息，修改同样使用富文本编辑器。添加时可以选择信息的分类。
