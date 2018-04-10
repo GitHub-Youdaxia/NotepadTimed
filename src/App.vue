@@ -17,7 +17,8 @@ export default {
     // store.clear()
     // this.log(' store.get()',store.get('classArr'));
     //初始化本地存储
-    if(!store.get('classArr')){
+    if(!store.get('classArr')||store.get('classArr').length==0){
+      console.log(store.get('classArr').length)
       store.set('classArr',this.classArr)
       var classArrLength=this.classArr.length
       for(var i=0;i<classArrLength;i++){
